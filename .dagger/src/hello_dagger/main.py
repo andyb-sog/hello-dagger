@@ -14,6 +14,7 @@ class HelloDagger:
             dagger.Directory, DefaultPath("/"), Doc("hello-dagger source directory")
         ],
         image: Annotated[str, Doc("Image reference")],
+        ghcr_token: Annotated[dagger.Secret, Doc("GHCR authentication token")],
     ) -> str:
         await self.test(source)
         return await (
@@ -21,11 +22,10 @@ class HelloDagger:
             .with_registry_auth(
                 "ghcr.io",
                 "oauth2",
-                dag.set_secret("ghcr", os.environ["GHCR_TOKEN"]),
+                ghcr_token,
             )
             .publish(image)
-        )
-        
+        )      
     @function
     def build(
         self,
