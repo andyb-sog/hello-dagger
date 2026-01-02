@@ -13,13 +13,19 @@ class HelloDagger:
         source: Annotated[
             dagger.Directory, DefaultPath("/"), Doc("hello-dagger source directory")
         ],
+        image: Annotated[str, Doc("Image reference")],
     ) -> str:
-        """Publish the application container after building and testing it on-the-fly"""
         await self.test(source)
-        return await self.build(source).publish(
-            f"ttl.sh/hello-dagger-{random.randrange(10**8)}"
+        return await (
+            self.build(source)
+            .with_registry_auth(
+                "ghcr.io",
+                "oauth2",
+                dag.set_secret("ghcr", os.environ["GHCR_TOKEN"]),
+            )
+            .publish(image)
         )
-
+        
     @function
     def build(
         self,
