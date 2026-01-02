@@ -20,7 +20,8 @@ jobs:
 
       - name: Install Dagger
         uses: dagger/dagger-for-github@v7
-
+        with:
+          version: v0.19.8
       - name: Publish image with Dagger
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
