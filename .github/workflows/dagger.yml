@@ -27,4 +27,6 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
         run: |
-          dagger call publish --image "$IMAGE"
+          dagger call publish \
+            --image "$IMAGE" \
+            --env GHCR_TOKEN
